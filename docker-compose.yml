@@ -1,0 +1,32 @@
+version: '3'
+services:
+  my-clickhouse:
+    build:
+      context: .
+      dockerfile: Dockerfile-clickhouse
+    container_name: my-clickhouse
+    volumes:
+      - ./clickhouse_config:/etc/clickhouse-server
+    ports:
+      - "8123:8123" 
+    networks:
+      - my-network
+  my-app:
+    build:
+      context: .
+      dockerfile: Dockerfile-myapp
+    container_name: my-app
+    depends_on:
+      - my-clickhouse
+    volumes:
+      - ./source:/app/source
+      - ./output_data:/app/output_data
+      - ./zulip_config:/app/zulip_config
+    working_dir: /app
+    networks:
+      - my-network
+    links: 
+      - my-clickhouse
+
+networks:
+  my-network:

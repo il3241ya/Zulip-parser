@@ -1,0 +1,3 @@
+FROM yandex/clickhouse-server
+
+COPY clickhouse_config/ /etc/clickhouse-server/
